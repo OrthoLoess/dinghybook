@@ -1,0 +1,9 @@
+SECRET_KEY = 'secret_key'
+
+SESSION_COOKIE_NAME = 'db_session'
+
+# SQLAlchemy config
+SQLALCHEMY_DATABASE_URI = 'sqlite:///project.db'
+
+# Extension config
+BOOTSTRAP_BOOTSWATCH_THEME = 'vapor'

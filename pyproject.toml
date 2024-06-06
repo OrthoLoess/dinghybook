@@ -1,0 +1,71 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dinghybook"
+dynamic = ["version"]
+description = 'Dinghy fleet booking app'
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Ed Landamore", email = "ortho@ratship.net" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "bootstrap-flask~=2.4",
+  "click~=8.1",
+  "flask~=3.0",
+  "flask-sqlalchemy~=3.1",
+  "flask-talisman~=1.1",
+  "python-dotenv~=1.0",
+  "sqlalchemy~=2.0",
+]
+
+[project.urls]
+Documentation = "https://github.com/Ed Landamore/dinghybook#readme"
+Issues = "https://github.com/Ed Landamore/dinghybook/issues"
+Source = "https://github.com/Ed Landamore/dinghybook"
+
+[project.scripts]
+dinghybook = "dinghybook.cli:dinghybook"
+
+[tool.hatch.version]
+path = "src/dinghybook/__about__.py"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/dinghybook tests}"
+
+[tool.coverage.run]
+source_pkgs = ["dinghybook", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/dinghybook/__about__.py",
+]
+
+[tool.coverage.paths]
+dinghybook = ["src/dinghybook", "*/dinghybook/src/dinghybook"]
+tests = ["tests", "*/dinghybook/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
