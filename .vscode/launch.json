@@ -1,6 +1,23 @@
 {
     "configurations": [
         {
+            "name": "Python Debugger: Flask",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "src/dinghybook/__init__.py",
+                "FLASK_DEBUG": "1"
+            },
+            "args": [
+                "run",
+                "--no-debugger",
+                "--no-reload"
+            ],
+            "jinja": true,
+            "autoStartBrowser": false
+        },
+        {
             "name": "Docker: Python - Flask",
             "type": "docker",
             "request": "launch",

@@ -15,7 +15,18 @@ from dinghybook.models import Boat, Handicap, Issue, Type, User
 @click.group(context_settings={'help_option_names': ['-h', '--help']}, invoke_without_command=True)
 @click.version_option(version=__version__, prog_name='dinghybook')
 def dinghybook():
-    pass
+    # pass
+    with app.app_context():
+        boats_tmp = db.session.execute(db.select(Boat)).scalars()
+        boats = []
+        for boat in boats_tmp.all():
+            boats.append({  # noqa: PERF401
+                'id': boat.id,
+                'name': boat.name,
+                'type': boat.type.name,
+                'last_updated': boat.last_updated.strftime('%d/%m/%Y, %H:%M:%S'),
+            })
+        print(boats)
 
 
 @dinghybook.command()

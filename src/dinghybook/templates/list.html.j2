@@ -1,0 +1,21 @@
+{% extends "base.html.j2" %}
+
+{% block title %}{{ request.path.strip('/').capitalize() }}{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <h1 class="display-1">{{ request.path.strip('/').capitalize() }}</h1>
+        </div>
+    </div>
+{%- for row in list %}
+    <div class="row">
+    {%- for key, value in row.items() %}
+        <div class="col">
+            {{ value }}
+        </div>
+    {%- endfor %}
+    </div>
+{%- endfor %}
+</div>
+{% endblock %}

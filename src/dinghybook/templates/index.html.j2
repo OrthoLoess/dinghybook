@@ -1,16 +1,10 @@
 {% extends "base.html.j2" %}
 {% block title %}Index{% endblock %}
-{% block head %}
-    {{ super() }}
-    <style type="text/css">
-        .important { color: #336699; }
-    </style>
-{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-auto">
-            <h1>Index</h1>
+            <h1 class="display-1">Index</h1>
         </div>
     </div>
     <div class="row">
@@ -18,7 +12,7 @@
             Column
         </div>
         <div class="col">
-            <p class="important">
+            <p class="lead">
                 Welcome to my awesome homepage.
             </p>
         </div>
