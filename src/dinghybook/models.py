@@ -4,6 +4,7 @@ from datetime import date, datetime  # noqa: TCH003
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy_json import MutableJson
 
 from dinghybook.database import db
 
@@ -13,6 +14,7 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
     email: Mapped[str] = mapped_column(unique=True)
+    profile: Mapped[Profile] = relationship(back_populates='user', cascade='all, delete-orphan')
 
     # def __init__(self, name=None, email=None):
     #     self.name = name
@@ -20,6 +22,22 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.name!r}>'
+
+
+class Profile(db.Model):
+    __tablename__ = 'user_profiles'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
+    user: Mapped[User] = relationship(back_populates='profile')
+    certificates: Mapped[list[str]] = mapped_column(MutableJson)  # rya certificates or similar inc. first_aid
+    roles: Mapped[list[str]] = mapped_column(MutableJson)  # roles e.g. approved_helm, safety3
+
+    # def __init__(self, name=None, email=None):
+    #     self.name = name
+    #     self.email = email
+
+    def __repr__(self):
+        return f'<Profile for {self.user.name!r}>'
 
 
 class Boat(db.Model):
