@@ -1,20 +1,24 @@
 from __future__ import annotations
 
-from datetime import date, datetime  # noqa: TCH003
+import enum
+from datetime import date, datetime, time  # noqa: TCH003
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy_json import MutableJson
 
-from dinghybook.database import db
+from dinghybook.database import Base
 
 
-class User(db.Model):
+class User(Base):
     __tablename__ = 'users'
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
     email: Mapped[str] = mapped_column(unique=True)
-    profile: Mapped[Profile] = relationship(back_populates='user', cascade='all, delete-orphan')
+    # rya certificates or similar inc. first_aid
+    certificates: Mapped[list[str]] = mapped_column(MutableJson)
+    # roles e.g. approved_helm, safety3
+    roles: Mapped[list[str]] = mapped_column(MutableJson)
 
     # def __init__(self, name=None, email=None):
     #     self.name = name
@@ -24,23 +28,7 @@ class User(db.Model):
         return f'<User {self.name!r}>'
 
 
-class Profile(db.Model):
-    __tablename__ = 'user_profiles'
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
-    user: Mapped[User] = relationship(back_populates='profile')
-    certificates: Mapped[list[str]] = mapped_column(MutableJson)  # rya certificates or similar inc. first_aid
-    roles: Mapped[list[str]] = mapped_column(MutableJson)  # roles e.g. approved_helm, safety3
-
-    # def __init__(self, name=None, email=None):
-    #     self.name = name
-    #     self.email = email
-
-    def __repr__(self):
-        return f'<Profile for {self.user.name!r}>'
-
-
-class Boat(db.Model):
+class Boat(Base):
     __tablename__ = 'boats'
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
@@ -51,7 +39,7 @@ class Boat(db.Model):
     issues: Mapped[list[Issue]] = relationship(back_populates='boat')
 
 
-class Type(db.Model):
+class Type(Base):
     __tablename__ = 'types'
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
@@ -62,7 +50,7 @@ class Type(db.Model):
     issues: Mapped[list[Issue]] = relationship(back_populates='type')
 
 
-class Handicap(db.Model):
+class Handicap(Base):
     __tablename__ = 'handicaps'
     id: Mapped[int] = mapped_column(primary_key=True)
     value: Mapped[int]
@@ -72,7 +60,7 @@ class Handicap(db.Model):
     comment: Mapped[str] = mapped_column(nullable=True)
 
 
-class Issue(db.Model):
+class Issue(Base):
     __tablename__ = 'issues'
     id: Mapped[int] = mapped_column(primary_key=True)
     type_id: Mapped[int] = mapped_column(ForeignKey('types.id'))
@@ -82,3 +70,19 @@ class Issue(db.Model):
     reported: Mapped[datetime]
     comment: Mapped[str]
     more_details: Mapped[str] = mapped_column(nullable=True)
+
+
+class EventType(enum.Enum):
+    race = 1
+    cruise = 2
+    training = 3
+    social = 4
+
+
+class Event(Base):
+    __tablename__ = 'events'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    type: Mapped[EventType]
+    date: Mapped[date]
+    start: Mapped[time] = mapped_column(nullable=True)
+    briefing: Mapped[time] = mapped_column(nullable=True)

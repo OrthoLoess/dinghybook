@@ -20,6 +20,7 @@ bootstrap = Bootstrap5(app)
 import dinghybook.models  # noqa: E402
 import dinghybook.views  # noqa: E402, F401
 
+# db.create_all()
 db.init_app(app)
 
 

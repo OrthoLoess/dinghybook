@@ -9,10 +9,13 @@ import tomllib
 from dinghybook import app
 from dinghybook.__about__ import __version__
 from dinghybook.database import db
-from dinghybook.models import Boat, Handicap, Issue, Type, User
+from dinghybook.models import Boat, Event, Handicap, Issue, Type, User
 
 
-@click.group(context_settings={'help_option_names': ['-h', '--help']}, invoke_without_command=True)
+@click.group(
+    context_settings={'help_option_names': ['-h', '--help']},
+    invoke_without_command=False,
+)
 @click.version_option(version=__version__, prog_name='dinghybook')
 def dinghybook():
     # pass
@@ -20,13 +23,15 @@ def dinghybook():
         boats_tmp = db.session.execute(db.select(Boat)).scalars()
         boats = []
         for boat in boats_tmp.all():
-            boats.append({  # noqa: PERF401
-                'id': boat.id,
-                'name': boat.name,
-                'type': boat.type.name,
-                'last_updated': boat.last_updated.strftime('%d/%m/%Y, %H:%M:%S'),
-            })
-        print(boats)
+            boats.append(  # noqa: PERF401
+                {
+                    'id': boat.id,
+                    'name': boat.name,
+                    'type': boat.type.name,
+                    'last_updated': boat.last_updated.strftime('%d/%m/%Y, %H:%M:%S'),
+                }
+            )
+        print(boats)  # noqa: T201
 
 
 @dinghybook.command()
@@ -65,6 +70,12 @@ def initdb(sample_data):
             db.session.commit()
             for datum in data['issues']:
                 obj = Issue()
+                for prop in datum:
+                    setattr(obj, prop, datum[prop])
+                db.session.add(obj)
+            db.session.commit()
+            for datum in data['events']:
+                obj = Event()
                 for prop in datum:
                     setattr(obj, prop, datum[prop])
                 db.session.add(obj)
