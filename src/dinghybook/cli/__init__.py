@@ -18,20 +18,18 @@ from dinghybook.models import Boat, Event, Handicap, Issue, Type, User
 )
 @click.version_option(version=__version__, prog_name='dinghybook')
 def dinghybook():
-    # pass
     with app.app_context():
         boats_tmp = db.session.execute(db.select(Boat)).scalars()
-        boats = []
-        for boat in boats_tmp.all():
-            boats.append(  # noqa: PERF401
-                {
-                    'id': boat.id,
-                    'name': boat.name,
-                    'type': boat.type.name,
-                    'last_updated': boat.last_updated.strftime('%d/%m/%Y, %H:%M:%S'),
-                }
-            )
-        print(boats)  # noqa: T201
+        boats = [
+            {
+                'id': boat.id,
+                'name': boat.name,
+                'type': boat.type.name,
+                'last_updated': boat.last_updated.strftime('%d/%m/%Y, %H:%M:%S'),
+            }
+            for boat in boats_tmp.all()
+        ]
+        click.echo(boats)
 
 
 @dinghybook.command()
