@@ -682,6 +682,11 @@ select = [
   "S",
   "TID252",
 ]
+"**/dinghybook/__init__.py" = [
+  "E402",
+  "ARG001",
+  "F401",
+]
 
 [lint.flake8-tidy-imports]
 ban-relative-imports = "all"

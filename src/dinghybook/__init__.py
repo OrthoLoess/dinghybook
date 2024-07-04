@@ -17,13 +17,13 @@ app.config.from_prefixed_env()
 # Talisman(app)
 bootstrap = Bootstrap5(app)
 
-import dinghybook.models  # noqa: E402
-import dinghybook.views  # noqa: E402, F401
+import dinghybook.models
+import dinghybook.views
 
 # db.create_all()
 db.init_app(app)
 
 
 @app.teardown_appcontext
-def shutdown_session(exception=None):  # noqa: ARG001
+def shutdown_session(exception=None):
     db.session.remove()
